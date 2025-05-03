@@ -23,14 +23,12 @@ namespace DesarrollodeEtapas.Controllers
             _context = context;
         }
 
-        // GET: api/ModGenes
         [HttpGet]
         public async Task<ActionResult<DTOMG<ModGene>>> Getmods()
         
           =>  await _context.Getall();
         
 
-        // GET: api/ModGenes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DTOMG<ModGene>>> GetModGene(int id)
         
@@ -38,19 +36,18 @@ namespace DesarrollodeEtapas.Controllers
 
            
 
-        // PUT: api/ModGenes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPut("{id}")]
         public async Task<ActionResult<DTOMG<string>>> PutModGene(ModGene modGene)
         => await _context.update(modGene);
 
-        // POST: api/ModGenes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<DTOMG<string>>> PostModGene(ModGene modGene)
-       => await _context.Add(modGene);
+       => 
+            
+            
+            await _context.Add(modGene);
 
-        // DELETE: api/ModGenes/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<DTOMG<string>>> DeleteModGene(int id)
         => await _context.Delete(id);

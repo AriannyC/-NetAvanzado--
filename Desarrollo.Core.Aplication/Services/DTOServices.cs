@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace Desarrollo.Core.Aplication.Services
 {
@@ -67,16 +68,30 @@ namespace Desarrollo.Core.Aplication.Services
         { 
 
             var ad = new DTOMG<string>();
+            
 
             try
             {
-                var res= await _process.AddAsync(mv);
-                ad.Message=res.Message;
-                ad.Successful = res.IsSucce;
+                if(mv.DueDate.Date > DateTime.Now.Date)
+                {
+                    var res = await _process.AddAsync(mv);
+                    ad.Message = res.Message;
+                    ad.Successful = res.IsSucce;
+                }
+                else
+                {
+                    ad.Successful = false;
+                    ad.Message = "Tiene que ser una fecha futura";
+                }
+
+            
+               
+               
 
             }
             catch (Exception e)
             {
+
 
                 ad.Errors.Add(e.Message);
             }
