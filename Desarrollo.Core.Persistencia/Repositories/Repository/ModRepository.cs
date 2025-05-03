@@ -17,7 +17,7 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
         {
             _applicationcontex = applicationcontex;
         }
-        public async Task<(bool IsSucce, string Menssa)> AddAsync(ModGene Entry)
+        public async Task<(bool IsSucce, string Message)> AddAsync(ModGene Entry)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
             }
         }
 
-        public async Task<(bool IsSucce, string Menssa)> DeleteAsync(int id)
+        public async Task<(bool IsSucce, string Message)> DeleteAsync(int id)
         {
             try
             {
@@ -46,9 +46,11 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
 
                     _applicationcontex.mods.Remove(tr);
                     await _applicationcontex.SaveChangesAsync();
+                    return (true, "Eliminado correctamente");
+
 
                 }
-                return (true, "Eliminado correctamente");
+                return (true, "ENCONTRO correctamente");
 
             }
             catch (Exception)
@@ -58,17 +60,16 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
             }
         }
 
-        public Task<ModGene> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<IEnumerable<ModGene>> GetAllAsync()
 
-        public Task<ModGene> GetByAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+           => await _applicationcontex.mods.ToListAsync();
 
-        public async Task<(bool IsSucce, string Menssa)> UpdateAsync(ModGene entry)
+
+        public async Task<ModGene> GetByAsync(int id)
+
+            => await _applicationcontex.mods.FirstOrDefaultAsync(x=> x.Id==id);
+        
+        public async Task<(bool IsSucce, string Message)> UpdateAsync(ModGene entry)
         {
             try
             {
