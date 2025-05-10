@@ -17,11 +17,15 @@ namespace DesarrollodeEtapas.Controllers
     public class ModGenesController : ControllerBase
     {
         private readonly DTOServices _context;
+        private readonly Applicationcontex _application;
 
-        public ModGenesController(DTOServices context)
+        public ModGenesController(DTOServices context, Applicationcontex application)
         {
             _context = context;
+            _application = application;
         }
+
+      
 
         [HttpGet]
         public async Task<ActionResult<DTOMG<ModGene>>> Getmods()
@@ -34,9 +38,17 @@ namespace DesarrollodeEtapas.Controllers
         
           =>     await _context.Getby(id);
 
-           
+        [HttpGet("Pendientes")]
 
-       
+        public async Task<ActionResult<DTOMG<List<ModGene>>>> getpendien()
+        {
+
+            return Ok(new { can = await _application.mods.Where(tas => tas.Status == "Pendiente").ToListAsync()
+        });
+        }
+        
+
+
         [HttpPut("{id}")]
         public async Task<ActionResult<DTOMG<string>>> PutModGene(ModGene modGene)
         => await _context.update(modGene);

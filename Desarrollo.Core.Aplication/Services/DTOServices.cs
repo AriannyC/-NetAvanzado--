@@ -73,17 +73,11 @@ namespace Desarrollo.Core.Aplication.Services
 
             try
             {
-                if(mv.DueDate.Date > DateTime.Now.Date)
-                {
+                
                     var res = await _process.AddAsync(mv);
                     ad.Message = res.Message;
                     ad.Successful = res.IsSucce;
-                }
-                else
-                {
-                    ad.Successful = false;
-                    ad.Message = "Tiene que ser una fecha futura";
-                }
+               
 
             
                
@@ -92,7 +86,7 @@ namespace Desarrollo.Core.Aplication.Services
             }
             catch (Exception e)
             {
-
+               
 
                 ad.Errors.Add(e.Message);
             }
