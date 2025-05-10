@@ -23,6 +23,7 @@ namespace Desarrollo.Core.Aplication.Services
         }
 
 
+
         public async Task<DTOMG<ModGene>> Getall()
         {
             var response = new DTOMG<ModGene>();
