@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Desarrollo.Core.Aplication.Services
 {
@@ -16,13 +17,17 @@ namespace Desarrollo.Core.Aplication.Services
     {
 
         private readonly IProcess<ModGene> _process;
+        private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
+
 
         public DTOServices(IProcess<ModGene> process) {
         
         _process = process;
         }
+        delegate bool Validate(ModGene gene);
 
 
+        
 
         public async Task<DTOMG<ModGene>> Getall()
         {
@@ -31,6 +36,9 @@ namespace Desarrollo.Core.Aplication.Services
             {
                 response.DataList = await _process.GetAllAsync();
                 response.Successful = true;
+
+               
+
             }
             catch (Exception e)
             {
@@ -39,6 +47,7 @@ namespace Desarrollo.Core.Aplication.Services
             return response;
         }
 
+       
 
         public async Task<DTOMG<ModGene>> Getby(int id)
         {
@@ -66,22 +75,39 @@ namespace Desarrollo.Core.Aplication.Services
         }
 
         public async Task<DTOMG<string>> Add(ModGene mv)
-        { 
+        {
+            Validate vali = gene => !string.IsNullOrWhiteSpace(gene.Description) && gene.DueDate.Date > DateTime.Now.Date;
 
             var ad = new DTOMG<string>();
             
 
             try
             {
-                
-                    var res = await _process.AddAsync(mv);
-                    ad.Message = res.Message;
-                    ad.Successful = res.IsSucce;
-               
 
-            
-               
-               
+
+                if (!vali(mv))
+                {
+                    ad.Message = "Tiene que ser una fecha futura y la descripcion no puede estar vacia";
+                    ad.Successful = true;
+                    return ad;
+
+                }
+
+                Action<ModGene> notifyCreation = task =>
+            Console.WriteLine($"Tarea creada: {task.Description}, vencimiento: {task.DueDate}");
+                
+                var res = await _process.AddAsync(mv);
+                ad.Successful = res.IsSucce;
+                ad.Message = res.Message;
+                if (res.IsSucce)
+                {
+
+                    notifyCreation(mv); 
+                }
+
+
+
+
 
             }
             catch (Exception e)

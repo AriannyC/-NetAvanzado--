@@ -19,19 +19,29 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
         }
 
         delegate bool Validate(ModGene gene);
+        private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
 
+        public async Task<ModGene> caontobt(ModGene gene)
+        {
+
+
+
+
+
+
+            return null;
+        }
+
+
+            
+        
         public async Task<(bool IsSucce, string Message)> AddAsync(ModGene Entry)
         {
-             Validate vali = gene => !string.IsNullOrWhiteSpace(gene.Description) && gene.DueDate.Date > DateTime.Now.Date;
 
             try
             {
 
-                if (!vali(Entry))
-                {
-                   
-                    return(true, "Tiene que ser una fecha futura y la descripcion no puede estar vacia");
-                }
+               
                 await _applicationcontex.mods.AddAsync(Entry);
                 await _applicationcontex.SaveChangesAsync();
                 return (true, "Agregado Correctamente");

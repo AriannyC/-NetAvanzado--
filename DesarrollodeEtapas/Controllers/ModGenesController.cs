@@ -9,6 +9,8 @@ using Desarrollo.Core.Domain.Models;
 using Desarrollo.Core.Persistencia.Context;
 using Desarrollo.Core.Aplication.Services;
 using Desarrollo.Core.Domain.DTO;
+using Desarrollo.Core.Persistencia.Repositories.Repository;
+using Desarrollo.Core.Persistencia.Repositories.Common;
 
 namespace DesarrollodeEtapas.Controllers
 {
@@ -18,6 +20,7 @@ namespace DesarrollodeEtapas.Controllers
     {
         private readonly DTOServices _context;
         private readonly Applicationcontex _application;
+       
 
         public ModGenesController(DTOServices context, Applicationcontex application)
         {
@@ -46,12 +49,16 @@ namespace DesarrollodeEtapas.Controllers
             return Ok(new { can = await _application.mods.Where(tas => tas.Status == "Pendiente").ToListAsync()
         });
         }
-        
+
+       
 
 
         [HttpPut("{id}")]
         public async Task<ActionResult<DTOMG<string>>> PutModGene(ModGene modGene)
-        => await _context.update(modGene);
+        => 
+            
+            await _context.update(modGene);
+        
 
         [HttpPost]
         public async Task<ActionResult<DTOMG<string>>> PostModGene(ModGene modGene)

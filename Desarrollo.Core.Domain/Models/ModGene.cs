@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Desarrollo.Core.Domain.Models
 {
-    public class ModGene
+    public class ModGene 
     {
         public int Id { get; set; }
         public string Description { get; set; }
