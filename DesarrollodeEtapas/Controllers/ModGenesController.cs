@@ -70,7 +70,7 @@ namespace DesarrollodeEtapas.Controllers
             await _context.Add(modGene);
 
 
-        [HttpPost]
+        [HttpPost("Factory")]
         public async Task<ActionResult<DTOMG<string>>> PostModfac(string description)
        =>
              await _context.AddFactory(description);

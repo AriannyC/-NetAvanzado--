@@ -178,7 +178,7 @@ namespace Desarrollo.Core.Aplication.Services
             try
             {
                 var refw= await _process.AddAsync(afp);
-               af.Successful=refw.IsSucce;
+               af.Message=refw.Message;
                 af.Successful = refw.IsSucce;
 
             }
