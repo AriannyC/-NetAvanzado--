@@ -30,6 +30,8 @@ namespace DesarrollodeEtapas.Controllers
 
       
 
+
+
         [HttpGet]
         public async Task<ActionResult<DTOMG<ModGene>>> Getmods()
         
@@ -66,6 +68,12 @@ namespace DesarrollodeEtapas.Controllers
             
             
             await _context.Add(modGene);
+
+
+        [HttpPost]
+        public async Task<ActionResult<DTOMG<string>>> PostModfac(string description)
+       =>
+             await _context.AddFactory(description);
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<DTOMG<string>>> DeleteModGene(int id)

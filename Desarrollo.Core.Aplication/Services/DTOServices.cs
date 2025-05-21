@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
+using Desarrollo.Core.Aplication.Services.Factory;
 
 namespace Desarrollo.Core.Aplication.Services
 {
@@ -21,13 +22,13 @@ namespace Desarrollo.Core.Aplication.Services
 
 
         public DTOServices(IProcess<ModGene> process) {
-        
-        _process = process;
+
+            _process = process;
         }
         delegate bool Validate(ModGene gene);
 
 
-        
+
 
         public async Task<DTOMG<ModGene>> Getall()
         {
@@ -37,7 +38,7 @@ namespace Desarrollo.Core.Aplication.Services
                 response.DataList = await _process.GetAllAsync();
                 response.Successful = true;
 
-               
+
 
             }
             catch (Exception e)
@@ -47,7 +48,7 @@ namespace Desarrollo.Core.Aplication.Services
             return response;
         }
 
-       
+
 
         public async Task<DTOMG<ModGene>> Getby(int id)
         {
@@ -56,16 +57,16 @@ namespace Desarrollo.Core.Aplication.Services
             {
                 var rss = await _process.GetByAsync(id);
                 if (rss != null)
-                {     response.SingleData= rss;
+                { response.SingleData = rss;
                     response.Successful = true;
                 }
                 else
                 {
-                    response.Successful= false;
+                    response.Successful = false;
                     response.Message = "No se encontro";
                 }
-               
-            
+
+
             }
             catch (Exception e)
             {
@@ -73,7 +74,7 @@ namespace Desarrollo.Core.Aplication.Services
             }
             return response;
         }
-
+       
         public async Task<DTOMG<string>> Add(ModGene mv)
         {
             Validate vali = gene => !string.IsNullOrWhiteSpace(gene.Description) && gene.DueDate.Date > DateTime.Now.Date;
@@ -166,5 +167,31 @@ namespace Desarrollo.Core.Aplication.Services
 
 
 
-    }
+        public async Task<DTOMG<string>> AddFactory(string description)
+
+        {
+            var af = new DTOMG<string>();
+            var afp = ModFactory.CreateHighPriorityTask(description);
+
+
+
+            try
+            {
+                var refw= await _process.AddAsync(afp);
+               af.Successful=refw.IsSucce;
+                af.Successful = refw.IsSucce;
+
+            }
+            catch (Exception e) 
+            {
+
+                af.Errors.Add(e.Message);
+            }
+
+            return af;
+
+        }
+
+
+}
 }
