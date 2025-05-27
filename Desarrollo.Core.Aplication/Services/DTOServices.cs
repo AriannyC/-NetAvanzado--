@@ -20,6 +20,8 @@ namespace Desarrollo.Core.Aplication.Services
         private readonly IProcess<ModGene> _process;
         private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
 
+        Queue <ModGene> _queue= new Queue <ModGene>();
+
 
         public DTOServices(IProcess<ModGene> process) {
 
@@ -28,7 +30,7 @@ namespace Desarrollo.Core.Aplication.Services
         delegate bool Validate(ModGene gene);
 
 
-
+        
 
         public async Task<DTOMG<ModGene>> Getall()
         {
@@ -82,6 +84,7 @@ namespace Desarrollo.Core.Aplication.Services
             var ad = new DTOMG<string>();
             
 
+
             try
             {
 
@@ -93,18 +96,29 @@ namespace Desarrollo.Core.Aplication.Services
                     return ad;
 
                 }
-
                 Action<ModGene> notifyCreation = task =>
-            Console.WriteLine($"Tarea creada: {task.Description}, vencimiento: {task.DueDate}");
-                
-                var res = await _process.AddAsync(mv);
-                ad.Successful = res.IsSucce;
-                ad.Message = res.Message;
-                if (res.IsSucce)
-                {
+          Console.WriteLine($"Tarea creada: {task.Description}, vencimiento: {task.DueDate}");
 
-                    notifyCreation(mv); 
+
+                _queue.Enqueue(mv);
+
+                while (_queue.Count > 0) {
+                    var dequ = _queue.Dequeue();
+                    var res = await _process.AddAsync(dequ);
+                    ad.Successful = res.IsSucce;
+                    ad.Message = res.Message;
+                    Console.WriteLine($"el primero fue: {dequ.Description}");
+
+
+
+                    if (res.IsSucce)
+                    {
+
+                        notifyCreation(dequ);
+                    }
+
                 }
+               
 
 
 
