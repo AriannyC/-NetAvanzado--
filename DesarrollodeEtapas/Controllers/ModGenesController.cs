@@ -52,7 +52,11 @@ namespace DesarrollodeEtapas.Controllers
         });
         }
 
-       
+        [HttpPost("calculate")]
+        public async Task<ActionResult<DTOMG<ModGene>>> Calcu(ModGene task1)
+       => await _context.Calculate(task1);
+
+
 
 
         [HttpPut("{id}")]
