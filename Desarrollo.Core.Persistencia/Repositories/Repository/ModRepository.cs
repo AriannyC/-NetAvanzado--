@@ -19,18 +19,8 @@ namespace Desarrollo.Core.Persistencia.Repositories.Repository
         }
 
         delegate bool Validate(ModGene gene);
-        private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
 
-        public async Task<ModGene> caontobt(ModGene gene)
-        {
-
-
-
-
-
-
-            return null;
-        }
+       
 
 
             

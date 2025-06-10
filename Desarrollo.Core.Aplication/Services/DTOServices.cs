@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
 using Desarrollo.Core.Aplication.Services.Factory;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Desarrollo.Core.Aplication.Services
 {
@@ -19,6 +23,8 @@ namespace Desarrollo.Core.Aplication.Services
 
         private readonly IProcess<ModGene> _process;
         private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
+
+        private static Dictionary<string, double> cache = new Dictionary<string, double>();
 
         Queue <ModGene> _queue= new Queue <ModGene>();
 
@@ -50,16 +56,45 @@ namespace Desarrollo.Core.Aplication.Services
             return response;
         }
 
-                
+        public static double CalculateCompletionRate  (List<ModGene> tasks) 
+        {
+
+            if (tasks == null || tasks.Count == 0)
+
+                return 0;
+
+            var jeson= new JsonSerializerOptions { WriteIndented = false };
+            var op=JsonSerializer.Serialize(tasks, jeson);
+            if (cache.ContainsKey(op))
+                return cache[op];
+
+            var comple = tasks.Count(t => t.Status == "Completo");
+            double res= (double)comple / tasks.Count * 100;
+
+            cache[op] = res;
+            return res;
+        }
+        
+
+
+        public async Task<DTOMG<ModGene>> Calculate(ModGene tk)
+        {
+            Func<ModGene, int> calculate = task => (task.DueDate - DateTime.Now).Days;
+            int resul = calculate(tk);
+
+            var ad = new DTOMG<ModGene>
+            {
+
+                Message = $"faltan {resul} dias para la fecha de vencimiento",
+                Successful = true,
+
             };
 
             return ad;
 
-            
-
-
 
         }
+
 
         public async Task<DTOMG<ModGene>> Getby(int id)
         {
@@ -88,7 +123,8 @@ namespace Desarrollo.Core.Aplication.Services
        
         public async Task<DTOMG<string>> Add(ModGene mv)
         {
-            Validate vali = gene => !string.IsNullOrWhiteSpace(gene.Description) && gene.DueDate.Date > DateTime.Now.Date;
+            Validate vali = gene => !string.IsNullOrWhiteSpace(gene.Description) 
+            && gene.DueDate.Date > DateTime.Now.Date;
 
             var ad = new DTOMG<string>();
             

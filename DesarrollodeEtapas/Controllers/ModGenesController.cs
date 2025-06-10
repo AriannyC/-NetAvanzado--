@@ -36,7 +36,15 @@ namespace DesarrollodeEtapas.Controllers
         public async Task<ActionResult<DTOMG<ModGene>>> Getmods()
         
           =>  await _context.Getall();
-        
+
+        [HttpPost("porcen")]
+        public async Task<ActionResult<double>> getporc(List<ModGene> gn)
+
+        {
+            double res = DTOServices.CalculateCompletionRate(gn);
+            return Ok(res);
+            
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<DTOMG<ModGene>>> GetModGene(int id)
