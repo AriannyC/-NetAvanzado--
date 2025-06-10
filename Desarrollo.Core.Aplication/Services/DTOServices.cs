@@ -50,16 +50,6 @@ namespace Desarrollo.Core.Aplication.Services
             return response;
         }
 
-        public async Task<DTOMG<ModGene>> Calculate(ModGene tk)
-        {
-               Func<ModGene, int> calculate = task => (task.DueDate - DateTime.Now).Days;
-            int resul = calculate(tk);
-
-            var ad = new DTOMG<ModGene>
-            {
-
-                Message = $"faltan {resul} dias para la fecha de vencimiento",
-                Successful = true,
                 
             };
 
