@@ -49,6 +49,37 @@ namespace Desarrollo.Core.Persistencia.Migrations
 
                     b.ToTable("Modelgeneric", (string)null);
                 });
+
+            modelBuilder.Entity("Desarrollo.Core.Domain.Models.Ustoken", b =>
+                {
+                    b.Property<int>("IdR")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdR"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TokenCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TokenExpired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("refreshtoken1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdR");
+
+                    b.ToTable("LGT", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }

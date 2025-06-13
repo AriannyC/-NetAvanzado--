@@ -13,7 +13,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var ConnectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<Applicationcontex>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 
@@ -21,7 +21,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IProcess <ModGene>,ModRepository >();
 builder.Services.AddScoped<DTOServices>();
-builder.Services.AddSingleton<TOKEN>();
+builder.Services.AddScoped<TOKEN>();
+builder.Services.AddHttpContextAccessor();
 
 
 
@@ -50,7 +51,6 @@ builder.Services.AddAuthentication(confi =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<Applicationcontex>(options=> options.UseSqlServer(ConnectionStrings));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

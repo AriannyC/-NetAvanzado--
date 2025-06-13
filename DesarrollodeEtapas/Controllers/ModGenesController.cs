@@ -11,10 +11,14 @@ using Desarrollo.Core.Aplication.Services;
 using Desarrollo.Core.Domain.DTO;
 using Desarrollo.Core.Persistencia.Repositories.Repository;
 using Desarrollo.Core.Persistencia.Repositories.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DesarrollodeEtapas.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     [ApiController]
     public class ModGenesController : ControllerBase
     {

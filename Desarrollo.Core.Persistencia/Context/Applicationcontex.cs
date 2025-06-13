@@ -17,6 +17,7 @@ namespace Desarrollo.Core.Persistencia.Context
 
 
         public DbSet<ModGene> mods { get; set; }
+        public DbSet<Ustoken> ustokens { get; set; }
 
 
 
@@ -24,6 +25,8 @@ namespace Desarrollo.Core.Persistencia.Context
         {
             #region "Tabla"
             modelBuilder.Entity<ModGene>().ToTable("Modelgeneric");
+            modelBuilder.Entity<Ustoken>().ToTable("LGT");
+
 
 
             #endregion
@@ -31,6 +34,7 @@ namespace Desarrollo.Core.Persistencia.Context
             #region "PK"
 
             modelBuilder.Entity<ModGene>().HasKey(x => x.Id);
+            modelBuilder.Entity<Ustoken>().HasKey(x => x.IdR);
 
             #endregion
 

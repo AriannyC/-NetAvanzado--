@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desarrollo.Core.Persistencia.Migrations
 {
     [DbContext(typeof(Applicationcontex))]
-    [Migration("20250503140916_Initial")]
-    partial class Initial
+    [Migration("20250613181234_rltk")]
+    partial class rltk
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,37 @@ namespace Desarrollo.Core.Persistencia.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modelgeneric", (string)null);
+                });
+
+            modelBuilder.Entity("Desarrollo.Core.Domain.Models.Ustoken", b =>
+                {
+                    b.Property<int>("IdR")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdR"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TokenCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TokenExpired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("refreshtoken1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdR");
+
+                    b.ToTable("LGT", (string)null);
                 });
 #pragma warning restore 612, 618
         }
