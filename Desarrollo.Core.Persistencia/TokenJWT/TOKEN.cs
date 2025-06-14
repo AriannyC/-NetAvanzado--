@@ -83,6 +83,19 @@ namespace Desarrollo.Core.Persistencia.TokenJWT
 
 
         }
-        
+
+        public Refresh refrestoken()
+        {
+            var refresh = new Refresh
+            {
+                refreshtoken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddMinutes(1)
+
+            };
+            return refresh;
+
+        }
+
+
     }
 }
