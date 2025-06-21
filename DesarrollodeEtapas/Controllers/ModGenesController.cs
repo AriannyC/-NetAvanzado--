@@ -13,22 +13,28 @@ using Desarrollo.Core.Persistencia.Repositories.Repository;
 using Desarrollo.Core.Persistencia.Repositories.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Desarrollo.Core.Persistencia.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DesarrollodeEtapas.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[AllowAnonymous]
 
     [ApiController]
     public class ModGenesController : ControllerBase
     {
         private readonly DTOServices _context;
         private readonly Applicationcontex _application;
-       
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ModGenesController(DTOServices context, Applicationcontex application)
+
+
+        public ModGenesController(DTOServices context, Applicationcontex application, IHubContext<NotificationHub>hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
             _application = application;
         }
 
@@ -60,9 +66,12 @@ namespace DesarrollodeEtapas.Controllers
         public async Task<ActionResult<DTOMG<List<ModGene>>>> getpendien()
         {
 
-            return Ok(new { can = await _application.mods.Where(tas => tas.Status == "Pendiente").ToListAsync()
-        });
+            return Ok(new
+            {
+                can = await _application.mods.Where(tas => tas.Status == "Pendiente").ToListAsync()
+            });
         }
+       
 
         [HttpPost("calculate")]
         public async Task<ActionResult<DTOMG<ModGene>>> Calcu(ModGene task1)
@@ -76,14 +85,30 @@ namespace DesarrollodeEtapas.Controllers
         => 
             
             await _context.update(modGene);
-        
+
 
         [HttpPost]
         public async Task<ActionResult<DTOMG<string>>> PostModGene(ModGene modGene)
-       => 
-            
-            
-            await _context.Add(modGene);
+        {
+            var result = await _context.Add(modGene);
+
+            if (result.Successful)
+            {
+                await _hubContext.Clients.All.SendAsync("TareaUrgente", new
+                {
+                    descripcion = modGene.Description,
+                    vencimiento = modGene.DueDate,
+                    mensaje = "¡Nueva tarea urgente registrada!"
+                });
+
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+
+
 
 
         [HttpPost("Factory")]

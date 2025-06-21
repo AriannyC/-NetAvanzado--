@@ -8,6 +8,8 @@ using Desarrollo.Core.Persistencia.TokenJWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Desarrollo.Core.Persistencia.Hubs;
+using Microsoft.OpenApi.Models;
 
 
 
@@ -50,7 +52,32 @@ builder.Services.AddAuthentication(confi =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Enter your JWT Access Token",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
+
+builder.Services.AddSignalR(); 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,5 +93,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/ReceiveNotification");
 
 app.Run();

@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore.Storage.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.SignalR;
+using Desarrollo.Core.Persistencia.Hubs;
 
 namespace Desarrollo.Core.Aplication.Services
 {
@@ -25,13 +27,16 @@ namespace Desarrollo.Core.Aplication.Services
         private readonly Func<ModGene, int> obtcan = task => (task.DueDate - DateTime.Now).Days;
 
         private static Dictionary<string, double> cache = new Dictionary<string, double>();
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        Queue <ModGene> _queue= new Queue <ModGene>();
+
+        Queue<ModGene> _queue= new Queue <ModGene>();
 
 
-        public DTOServices(IProcess<ModGene> process) {
+        public DTOServices(IProcess<ModGene> process, IHubContext<NotificationHub> hubContext ) {
 
             _process = process;
+            _hubContext = hubContext;
         }
         delegate bool Validate(ModGene gene);
 
@@ -158,8 +163,9 @@ namespace Desarrollo.Core.Aplication.Services
 
                     if (res.IsSucce)
                     {
-
                         notifyCreation(dequ);
+
+                      
                     }
 
                 }
